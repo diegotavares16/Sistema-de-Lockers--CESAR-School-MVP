@@ -1,4 +1,4 @@
-# Sistema-de-Lockers--CESAR-School-MVP
+# Sistema de Lockers CESAR School MVP
 Acabo de plubicar meu primeiro mvp do projeto de gerenciamento de locker da CESAR School no GitHub. Desenvolvi um programa em Python para gerenciar o sistema de lockers da CESAR School, com o objetivo de automatizar e organizar o sistema atual de gerenciamento de lockers. O programa funciona da seguinte forma:
 
 1.Ao executar o programa, é possível escolher entre usar como usuário ou como administrador.
