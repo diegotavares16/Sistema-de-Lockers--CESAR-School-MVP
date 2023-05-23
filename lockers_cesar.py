@@ -20,6 +20,10 @@ def cadastrar_usuario():
         )
         return
 
+    if len(email_usuario) < 6 or len(senha_usuario) < 6:
+        print("O email e a senha devem ter pelo menos 6 caracteres.")
+        return
+
     confirmacao = input("Confirmar cadastro? (s/n): ")
 
     if confirmacao.lower() == "s":
@@ -161,7 +165,7 @@ def listar_locker_ocupado():
         if not status_locker["disponivel"]:
             usuario = None
             for u in usuarios.values():
-                if u["locker"] == numero_locker:
+                if "locker" in u and u["locker"] == numero_locker:
                     usuario = u
                     break
             if usuario:
@@ -179,7 +183,19 @@ def listar_lockers_pendentes():
     print("Lockers pendentes:")
     for numero_locker, status_locker in lockers_disponiveis.items():
         if status_locker["pendente"]:
-            print(f"Locker {numero_locker} - Senha: {status_locker['senha']}")
+            ultimo_usuario = None
+            for u in usuarios.values():
+                if "locker" in u and u["locker"] == numero_locker:
+                    ultimo_usuario = u
+                    break
+            if ultimo_usuario:
+                print(
+                    f"Locker {numero_locker} - Senha: {status_locker['senha']} - Último usuário: {ultimo_usuario['email']}"
+                )
+            else:
+                print(
+                    f"Locker {numero_locker} - Senha: {status_locker['senha']} - Nenhum usuário anterior"
+                )
 
 
 # Informar/alterar a senha do locker (apenas administrador pode executar a função)
@@ -303,22 +319,6 @@ def renovar_ou_liberar_locker(numero_locker):
         print("Locker ainda está válido.")
 
 
-# Função para verificar os lockers vencidos
-def verificar_lockers_vencidos():
-    print("Lockers vencidos:")
-    for numero_locker, dados_locker in lockers_disponiveis.items():
-        if not dados_locker["disponivel"]:
-            data_vencimento_str = datetime.strptime(
-                dados_locker["data_vencimento"], "%Y-%m-%d %H:%M:%S.%f"
-            )
-            data_vencimento = data_vencimento_str.date()
-
-            if datetime.now().date() > data_vencimento:
-                print(
-                    f"Locker {numero_locker} - Data de vencimento: {data_vencimento_str}"
-                )
-
-
 # Menu do usuário
 def menu_usuario(usuario):
     while True:
@@ -326,7 +326,7 @@ def menu_usuario(usuario):
         print("Selecione uma opção:")
         print("1. Reservar locker")
         print("2. Liberar locker")
-        print("3. Voltar para o menu de usuário.")
+        print("3. Voltar para área de login.")
 
         opcao = input("Digite a opção desejada: \n")
 
@@ -347,10 +347,9 @@ def menu_administrador():
         print("Selecione uma opção:")
         print("1. Listar status dos lockers")
         print("2. Listar apenas lockers ocupados")
-        print("3. Adicionar/Alterar senha do locker")
-        print("4. Listar lockers pendentes")
-        print("5. Verificar lockers vencidos")
-        print("6. Voltar para seleção de usuário.")
+        print("3. Listar lockers pendentes")
+        print("4. Adicionar/Alterar senha do locker")
+        print("5. Voltar para área de login.")
 
         opcao = input("Digite a opção desejada: \n")
 
@@ -360,12 +359,10 @@ def menu_administrador():
         elif opcao == "2":
             listar_locker_ocupado()
         elif opcao == "3":
-            senha_locker()
-        elif opcao == "4":
             listar_lockers_pendentes()
+        elif opcao == "4":
+            senha_locker()
         elif opcao == "5":
-            verificar_lockers_vencidos()
-        elif opcao == "6":
             break
         else:
             print("Opção inválida. Por favor, selecione uma opção válida.")
