@@ -44,8 +44,11 @@ def cadastrar_usuario():
             salvar_usuarios()
             salvar_lockers()
             print("Usuário cadastrado com sucesso!")
-    else:
+    elif confirmacao.lower() == "n":
         print("Cadastro cancelado.")
+    else:
+        print("Cadastro cancelado, insira apenas 's' ou 'n'.")
+        return
 
 
 # Função de login
@@ -202,7 +205,7 @@ def listar_lockers_pendentes():
 def senha_locker():
     numero_locker = input("Digite o número do locker que deseja adicionar a senha: ")
     if numero_locker in lockers_disponiveis:
-        senha_locker = input("Digite a senha de 4 dígitos do locker: ")
+        senha_locker = input("Digite a nova senha de 4 dígitos do locker: ")
         if len(senha_locker) == 4 and senha_locker.isdigit():
             lockers_disponiveis[numero_locker]["senha"] = senha_locker
             lockers_disponiveis[numero_locker]["pendente"] = False
